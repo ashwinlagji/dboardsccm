@@ -138,7 +138,7 @@ dbObject.collection('socialfact').aggregate([
  
  
 function getGenderLocation(responseObj) {
-dbObject.collection('socialdata').aggregate([
+/*dbObject.collection('socialdata').aggregate([
     { "$group": {
         "_id": {
             
@@ -161,6 +161,33 @@ dbObject.collection('socialdata').aggregate([
     
     
     { "$sort": { "count": -1 } },
+])*/dbObject.collection('socialdata').aggregate([
+    { "$group": {
+        "_id": {
+            "location": "$dataPlace",
+            "gender": "$gender",
+           
+        },
+        "names":{ "$addToSet": {"username":"$contributorName","tweetcount": "$userPostCount"}},
+       
+        "totalCount": { "$sum": 1 }
+    }},
+    { "$group": {
+        "_id": "$_id.gender",
+        "Locations": { 
+            "$addToSet": { 
+                "loc": "$_id.location",
+                "count": "$totalCount",
+                "names": "$names",
+               
+               
+            },
+        },
+        "count": { "$sum": "$totalCount" }
+    }},
+    
+    
+    { "$sort": { "count": -1 } },
 ]).toArray(function(err, docs){
     	
 	if ( err ) throw err;
@@ -171,11 +198,22 @@ dbObject.collection('socialdata').aggregate([
 for (index in docs){
 	var settings = [];
 	var doc = docs[index];
-	for ( C in doc['Genders']){
-		var d = doc['Genders'][C];
+	for ( C in doc['Locations']){
+		var d = doc['Locations'][C];
+		var childrens=[];
+		for(E in d['names']){
+			
+		 var f = d['names'][E];
+			childrens.push({
+				"name": f['username'],
+				"size": f['tweetcount'],
+			});
+		}
 		settings.push({
-							"name": d['gender'],
-							"size": d['count']});
+							"name": d['loc'],
+							"size": d['count'],
+							"children" : childrens
+					 });
 	}			
 	if(doc['_id'] != "U") {
 	editeditems.push({

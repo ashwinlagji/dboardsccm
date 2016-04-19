@@ -38,7 +38,7 @@ function MasterCtrl($scope, $cookieStore,$http) {
     };
 
 	
-	 $http.get("http://localhost:3300/getGenderLocation")
+	 $http.get("http://10.244.46.53:3300/getGenderLocation")
         .then(function(results){
 			 $scope.dataSunburst = [
 		results.data
