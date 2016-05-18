@@ -14,7 +14,6 @@ angular
 
 
             var w = (options.width > 880) ? 440 : options.width;
-            console.log("w=" + w);
             
             scope.$watchCollection('data', function (newVal, oldVal) {
                 
@@ -23,6 +22,13 @@ angular
                 redrawChart();
                 console.log(newVal.length);
             });
+            
+//            scope.$watchCollection('options', function (newVal, oldVal) {
+//                options = newVal;
+//                console.log('length changed');
+//                options.width = options.width - 160;
+//                redrawChart();
+//            });
 
             function drawWordCloud() {
                     

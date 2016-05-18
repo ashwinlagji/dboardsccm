@@ -3,13 +3,14 @@
  */
 
 angular.module('RDash')
-    .controller('MasterCtrl', ['$scope', '$cookieStore', '$http', MasterCtrl]);
+    .controller('MasterCtrl', ['$scope','$filter' ,'$cookieStore', '$http', MasterCtrl]);
 
-function MasterCtrl($scope, $cookieStore, $http) {
+function MasterCtrl($scope, $cookieStore, $http, $filter) {
     /**
      * Sidebar Toggle & Cookie Control
      */
     var mobileView = 992;
+    
     
     var obj={};
     
@@ -55,20 +56,25 @@ function MasterCtrl($scope, $cookieStore, $http) {
 
     // the wordcloud data
 
-    $http.get("http://localhost:3300/getKeywords")
-        .then(function (results) {
-            $scope.dataWordcloud = results.data;
-            $scope.flag = true; //wait for data to load
-        });
+//    $http.get("http://localhost:3300/getKeywords")
+//        .then(function (results) {
+//            $scope.dataWordcloud = results.data;
+//            $scope.flag = true; //wait for data to load
+//        });
 
-    
+    $scope.flag = true;
+    $scope.dataWordcloud=[{text:'rt',size:945},{text:'dfth',size:675},{text:'fgh',size:234}]
     $scope.optionsWordcloud={
                         height:450,
                         width:innerWidth};
     
-    $scope.$watch(innerWidth,function(newVal){
-        $scope.optionsWordcloud.width=innerWidth;
-    })
+    
+    $scope.wcdata=$scope.dataWordcloud;
+    
+    $scope.filterData=function(){
+        return $filter('filter')(dataWordcloud);
+    }
+    
     //sunburst chart data
 
     $http.get("http://localhost:3300/getGenderLocation")
